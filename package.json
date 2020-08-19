@@ -1,0 +1,42 @@
+{
+  "name": "tooooools-api",
+  "version": "1.0.0",
+  "description": "RESTful API with various utils for tooooools-* clients",
+  "scripts": {
+    "start": "cross-env NODE_ENV=development node index.js",
+    "lint": "eslint --ext .js ./api --cache",
+    "preinstall": "test -f .env || cp .env.example .env"
+  },
+  "author": "Arnaud Juracek <arnaud.juracek@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "cross-env": "^6.0.3",
+    "eslint": "^4.3.0",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-node": "^5.1.1",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^3.0.1"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-fileupload": "^1.1.6",
+    "fs-extra": "^8.1.0",
+    "glob": "^7.1.6",
+    "svg-to-pdf": "github:arnaudjuracek/svg-to-pdf",
+    "tmp": "^0.1.0",
+    "yn": "^4.0.0"
+  },
+  "private": false,
+  "optionalDependencies": {},
+  "homepage": "https://github.com/chevalvert/svg-to-pdf#readme",
+  "bugs": {
+    "url": "https://github.com/chevalvert/svg-to-pdf/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+git@github.com:chevalvert/svg-to-pdf.git"
+  }
+}
