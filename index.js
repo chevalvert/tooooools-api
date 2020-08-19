@@ -11,7 +11,9 @@ const upload = require('express-fileupload')
 require('dotenv').config({ path: path.resolve(__dirname, '.env') })
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'production'
-process.env.API_ENDPOINT = ensureLeadingSlash(process.env.API_ENDPOINT || '/api')
+process.env.API_ENDPOINT = process.env.API_ENDPOINT
+  ? ensureLeadingSlash(process.env.API_ENDPOINT)
+  : ''
 process.env.HTTP_PORT = process.env.HTTP_PORT || 8080
 process.env.MODULES = path.resolve(__dirname, 'api')
 process.env.PUBLIC = path.resolve(__dirname, process.env.PUBLIC)
@@ -33,6 +35,7 @@ app.use(errorHandler)
 
 // Display API when requesting root
 registerEndpoint({
+  endpoint: '/',
   description: 'Get this response',
   method: 'GET',
   action: (_, res) => res.status(200).json(endpoints)
@@ -85,11 +88,3 @@ function registerEndpoint ({
 function ensureLeadingSlash (endpoint) {
   return '/' + endpoint.replace(/^\/|\/$/g, '')
 }
-
-// function asyncGlob (pattern, options) {
-//   return new Promise((resolve, reject) => {
-//     glob(pattern, options, (error, files) => {
-//       error ? reject(error) : resolve(files)
-//     })
-//   })
-// }
