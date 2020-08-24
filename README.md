@@ -81,5 +81,12 @@ $ curl -H 'Content-Type: application/json' -X POST …/api/echo -d '{ "foo": "ba
 > {"foo":"bar"}
 ```
 
+### Deployment
+Deployment to [alwaysdata environment](https://api.tooooools.com) is done automatically via a [Github action](.github/workflows/deploy-alwaysdata.yml). Simply create a new release by running:
+
+```console
+$ npm version [<newversion> | major | minor | patch]
+```
+
 ## License
 [MIT.](https://tldrlegal.com/license/mit-license)
