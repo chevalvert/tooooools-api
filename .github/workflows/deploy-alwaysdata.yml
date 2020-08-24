@@ -18,4 +18,4 @@ jobs:
             cd $HOME/tooooools/api
             git pull
             npm install
-            curl --basic --user ${{ secrets.ALWAYSDATA_TOKEN }}: --request POST https://api.alwaysdata.com/v1/site/${{ secrets.ALWAYSDATA_SITE_ID }}/restart/
+            curl --basic --user "${{ secrets.ALWAYSDATA_TOKEN }} account=${{ secrets.ALWAYSDATA_ACCOUNT }}:" --request POST https://api.alwaysdata.com/v1/site/${{ secrets.ALWAYSDATA_SITE_ID }}/restart/
