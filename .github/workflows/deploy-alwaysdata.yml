@@ -16,6 +16,7 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
             cd $HOME/tooooools/api
-            git pull
+            git fetch --all
+            git reset --hard origin/master
             npm install
             curl --basic --user "${{ secrets.ALWAYSDATA_TOKEN }} account=${{ secrets.ALWAYSDATA_ACCOUNT }}:" --request POST https://api.alwaysdata.com/v1/site/${{ secrets.ALWAYSDATA_SITE_ID }}/restart/
