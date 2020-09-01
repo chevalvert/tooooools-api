@@ -20,11 +20,14 @@
   },
   "dependencies": {
     "cors": "^2.8.5",
+    "csv-write-stream": "^2.0.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-fileupload": "^1.1.6",
     "fs-extra": "^8.1.0",
     "glob": "^7.1.6",
+    "ip-anonymize": "^0.1.0",
+    "sanitize-filename": "^1.6.3",
     "svg-to-pdf": "github:arnaudjuracek/svg-to-pdf",
     "tmp": "^0.1.0",
     "yn": "^4.0.0"

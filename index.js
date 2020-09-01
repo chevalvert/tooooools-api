@@ -15,9 +15,13 @@ process.env.API_ENDPOINT = process.env.API_ENDPOINT
   ? ensureLeadingSlash(process.env.API_ENDPOINT)
   : ''
 process.env.HTTP_PORT = process.env.HTTP_PORT || 8080
+
 process.env.MODULES = path.resolve(__dirname, 'api')
 process.env.PUBLIC = path.resolve(__dirname, process.env.PUBLIC)
+process.env.LOGS = path.resolve(__dirname, process.env.LOGS)
+
 fs.ensureDirSync(process.env.PUBLIC)
+fs.ensureDirSync(process.env.LOGS)
 
 // Setup and start server
 
