@@ -4,8 +4,6 @@ const anonymize = require('ip-anonymize')
 const sanitize = require('sanitize-filename')
 const csvWriter = require('csv-write-stream')
 
-const isLocalhost = ip => ['::1', '127.0.01'].includes(ip)
-
 module.exports = {
   method: 'POST',
   endpoint: 'log/:namespace',
@@ -23,7 +21,10 @@ module.exports = {
 
       writer.write({
         date: new Date(),
-        user: isLocalhost(req.ip) ? '127.0.0.1' : anonymize(req.ip),
+        user: anonymize(process.env.REMOTE_IP_HEADER
+          ? req.headers[process.env.REMOTE_IP_HEADER]
+          : req.ip
+        ),
         action: req.body.action || 'log',
         data: JSON.stringify(req.body.data || {})
       })
