@@ -31,7 +31,12 @@ const router = express.Router()
 
 app.use(logRequest)
 app.use(cors({ exposedHeaders: '*' }))
-app.use(upload({ createParentPath: true }))
+app.use(upload({
+  createParentPath: true,
+  limits: {
+    fieldSize: 50 * 1024 * 1024
+  }
+}))
 app.use(express.json())
 app.use(express.static(process.env.PUBLIC))
 app.use(process.env.API_ENDPOINT, router)
