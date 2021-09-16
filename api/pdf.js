@@ -13,10 +13,24 @@ async function moveAllRequestFiles (files = {}, docPath) {
 module.exports = {
   method: 'POST',
   description: 'Convert svg to pdf',
+  // The body content type should be multipart/form-data
+  body: {
+    svg: {
+      required: true,
+      type: 'string',
+      description: 'SVG string'
+    },
+    options: {
+      required: false,
+      default: '{}',
+      type: 'string',
+      description: 'Stringified JSON object defining svg-to-pdf options'
+    }
+  },
   action: async (req, res, next) => {
     try {
       const tmpPath = tmp.tmpNameSync({ dir: process.env.PUBLIC })
-      const options = Object.assign({}, JSON.parse(req.body.options || '{}'), {
+      const options = Object.assign({}, JSON.parse(req.body.options), {
         docPath: tmpPath + '.pdf',
         rootPath: tmpPath
       })
