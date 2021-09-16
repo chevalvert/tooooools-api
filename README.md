@@ -17,7 +17,7 @@ $ npm install
 
 ```sh
 $ node tooooools-api
-> Server is listenning on port 8080
+> Server is listening on port 8080
 ```
 
 ### API endpoints
@@ -27,7 +27,8 @@ $ curl -X GET …/api
 > {
     "/endpoint": {
       "description": …,
-      "method" : …
+      "method": …,
+      "body": {…}
     },
     …
   }
@@ -52,20 +53,29 @@ $ npm run lint
 Create a new endpoint by creating a new JavaScript file in [`/api`](api/).
 
 By default, the RESTful endpoint will match the file path.
-This behavior can be overwritten by specifying a custom `endpoint` key in the exported module.
+This behavior can be overwritten by specifying a custom `endpoint` property in the exported module.
 
 <sup>**Note:** nested paths will be followed, so `api/foo/bar/baz.js` will match the route `api/foo/bar/baz`.</sup>
 
-The `action` key is the classic express middleware signature.
+An optional `body` property can define the signature of the expected request body. If the request body does not match the defined signature, various verbose errors will be thrown instead of running the action.
+
+The `action` property is the classic express middleware signature.
 
 #### `api/echo.js`
 
 ```js
 module.exports = {
   method: 'POST',
-  // endpoint: 'echo/:message?',
-  description: 'Return the payload',
-  action: (req, res, next) => res.send(req.body)
+  // endpoint: 'echo/:param?',
+  description: 'Return the body `message` property',
+  body: {
+    message: {
+      required: true,
+      type: 'string', // Can also be an array of types in case of mixed types
+      description: 'The message to echo'
+    }
+  },
+  action: (req, res, next) => res.send(req.body.message)
 }
 ```
 ```sh
@@ -73,12 +83,13 @@ $ curl -X GET …/api
 > {
   "/api/echo": {
     "description": "Return the payload",
-    "method": "POST"
+    "method": "POST",
+    "body": {…}
   }
 }
 
-$ curl -H 'Content-Type: application/json' -X POST …/api/echo -d '{ "foo": "bar" }'
-> {"foo":"bar"}
+$ curl -H 'Content-Type: application/json' -X POST …/api/echo -d '{ "message": "Hello world" }'
+> "Hello world"
 ```
 
 ### Deployment

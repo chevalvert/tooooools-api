@@ -82,16 +82,36 @@ function registerEndpoint ({
   endpoint,
   method = 'GET',
   action,
+  body,
   description = 'No description available'
 } = {}) {
   if (!action) return
 
   endpoint = endpoint ? ensureLeadingSlash(endpoint) : ''
-  endpoints[process.env.API_ENDPOINT + endpoint] = { description, method }
+  endpoints[process.env.API_ENDPOINT + endpoint] = { description, method, body }
 
-  if (method === 'GET') router.get(endpoint, action)
-  if (method === 'POST') router.post(endpoint, action)
-  else router.all(endpoint, action)
+  if (method === 'GET') router.get(endpoint, ensureValidBody(action, body))
+  if (method === 'POST') router.post(endpoint, ensureValidBody(action, body))
+  else router.all(endpoint, ensureValidBody(action, body))
+}
+
+// Decorate an action to ensure that it validates its req.body against a body
+// signature before running its action
+function ensureValidBody (action, bodySignature) {
+  return function (req, res, next) {
+    if (!bodySignature) return action(req, res, next)
+
+    for (const [key, { required, type }] of Object.entries(bodySignature)) {
+      if (required && !req.body.hasOwnProperty(key)) return next(new Error(`Query malformation: '${key}' key expected in body`))
+
+      const allowedTypes = Array.isArray(type) ? type : [type]
+      if (!allowedTypes.includes(typeof req.body[key])) {
+        return next(new TypeError(`Query malformation: '${key}' key expected to be of type '${allowedTypes.join('|')}', got '${typeof req.body[key]}' instead`))
+      }
+    }
+
+    action(req, res, next)
+  }
 }
 
 function ensureLeadingSlash (endpoint) {
