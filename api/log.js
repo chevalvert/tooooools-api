@@ -7,7 +7,21 @@ const csvWriter = require('csv-write-stream')
 module.exports = {
   method: 'POST',
   endpoint: 'log/:namespace',
-  description: "Append a new entry in the corresponding namespaced log, creating the file if none. Accepts a { action: '', data: {} } body. IP are anonymized, user inputs sanitized.",
+  description: 'Append a new entry in the corresponding namespaced log, creating the file if none. IP are anonymized, user inputs sanitized.',
+  body: {
+    action: {
+      required: false,
+      default: 'log',
+      type: 'string',
+      description: 'Name of the log entry'
+    },
+    data: {
+      required: false,
+      default: {},
+      type: ['boolean', 'number', 'string', 'object'],
+      description: 'Additional data to attach to the log entry'
+    }
+  },
   action: async (req, res, next) => {
     try {
       const filename = sanitize(req.params.namespace || '')
@@ -25,8 +39,8 @@ module.exports = {
           ? req.headers[process.env.REMOTE_IP_HEADER]
           : req.ip
         ),
-        action: req.body.action || 'log',
-        data: JSON.stringify(req.body.data || {})
+        action: req.body.action,
+        data: JSON.stringify(req.body.data)
       })
 
       writer.end()
