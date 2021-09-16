@@ -16,7 +16,8 @@
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-node": "^5.1.1",
     "eslint-plugin-promise": "^3.5.0",
-    "eslint-plugin-standard": "^3.0.1"
+    "eslint-plugin-standard": "^3.0.1",
+    "node-fetch": "^2.6.2"
   },
   "dependencies": {
     "cors": "^2.8.5",
@@ -33,7 +34,6 @@
     "yn": "^4.0.0"
   },
   "private": false,
-  "optionalDependencies": {},
   "homepage": "https://github.com/chevalvert/svg-to-pdf#readme",
   "bugs": {
     "url": "https://github.com/chevalvert/svg-to-pdf/issues"
