@@ -101,12 +101,21 @@ function ensureValidBody (action, bodySignature) {
   return function (req, res, next) {
     if (!bodySignature) return action(req, res, next)
 
-    for (const [key, { required, type }] of Object.entries(bodySignature)) {
-      if (required && !req.body.hasOwnProperty(key)) return next(new Error(`Query malformation: '${key}' key expected in body`))
+    for (const [key, { required, type, default: defaultValue }] of Object.entries(bodySignature)) {
+      // Ensure all required keys are present
+      if (required && !req.body.hasOwnProperty(key)) {
+        return next(new Error(`Query malformation: '${key}' key expected in body`))
+      }
 
+      // Ensure type of all keys
       const allowedTypes = Array.isArray(type) ? type : [type]
-      if (!allowedTypes.includes(typeof req.body[key])) {
+      if (![...allowedTypes, 'undefined'].includes(typeof req.body[key])) {
         return next(new TypeError(`Query malformation: '${key}' key expected to be of type '${allowedTypes.join('|')}', got '${typeof req.body[key]}' instead`))
+      }
+
+      // Set empty keys with default if defined in the signature
+      if (req.body[key] === undefined && defaultValue !== undefined) {
+        req.body[key] = defaultValue
       }
     }
 

@@ -73,9 +73,15 @@ module.exports = {
       required: true,
       type: 'string', // Can also be an array of types in case of mixed types
       description: 'The message to echo'
+    },
+    delay: {
+      required: false,
+      default: 0,
+      type: 'number',
+      description: 'Delay before sending back the message'
     }
   },
-  action: (req, res, next) => res.send(req.body.message)
+  action: (req, res, next) => setTimeout(() => res.send(req.body.message), req.body.delay)
 }
 ```
 ```sh
