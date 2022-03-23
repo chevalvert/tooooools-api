@@ -7,6 +7,7 @@ const glob = require('glob')
 const http = require('http')
 const path = require('path')
 const upload = require('express-fileupload')
+const pkg = require('./package.json')
 
 require('dotenv').config({ path: path.resolve(__dirname, '.env') })
 
@@ -23,6 +24,8 @@ process.env.LOGS = path.resolve(__dirname, process.env.LOGS)
 fs.ensureDirSync(process.env.PUBLIC)
 fs.ensureDirSync(process.env.LOGS)
 
+const whitelist = (process.env.WHITELIST || '').trim().split('\n')
+
 // Setup and start server
 
 const endpoints = {}
@@ -30,7 +33,13 @@ const app = express()
 const router = express.Router()
 
 app.use(logRequest)
-app.use(cors({ exposedHeaders: '*' }))
+app.use(cors({
+  exposedHeaders: '*',
+  origin: (origin, callback) => {
+    if (whitelist.includes(origin) || !origin) callback(null, true)
+    else callback(new Error(`Not allowed by CORS, make sure '${origin}' is in ${pkg.name} whitelist`))
+  }
+}))
 app.use(upload({
   createParentPath: true,
   limits: {
@@ -64,11 +73,13 @@ for (const file of files) {
 http
   .createServer(app)
   .listen(process.env.HTTP_PORT, () => {
-    console.log(new Date(), `Server is up and running on port ${process.env.HTTP_PORT}`)
+    console.log(new Date())
+    console.log(`  Server is up and running on port ${process.env.HTTP_PORT}`)
+    console.log(`  Allowed CORS origins:\n${whitelist.map(o => '    → ' + o).join('\n')}`)
   })
 
 function logRequest (req, res, next) {
-  const message = { endpoint: req.originalUrl, method: req.method, ip: req.ip }
+  const message = { origin: req.headers.origin, endpoint: req.originalUrl, method: req.method, ip: req.ip }
   console.log(new Date(), message)
   next()
 }
