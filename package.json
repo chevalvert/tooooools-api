@@ -3,7 +3,7 @@
   "version": "1.6.0",
   "description": "RESTful API with various utils for tooooools-* clients",
   "scripts": {
-    "start": "cross-env NODE_ENV=development node index.js",
+    "start": "cross-env NODE_ENV=development nodemon index.js --watch api",
     "lint": "eslint --ext .js ./api --cache",
     "preinstall": "test -f .env || cp .env.example .env"
   },
@@ -17,7 +17,8 @@
     "eslint-plugin-node": "^5.1.1",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
-    "node-fetch": "^2.6.2"
+    "node-fetch": "^2.6.2",
+    "nodemon": "^2.0.15"
   },
   "dependencies": {
     "cors": "^2.8.5",
@@ -27,7 +28,9 @@
     "express-fileupload": "^1.1.6",
     "fs-extra": "^8.1.0",
     "glob": "^7.1.6",
+    "imagemagick": "^0.1.3",
     "ip-anonymize": "^0.1.0",
+    "mime-types": "^2.1.35",
     "sanitize-filename": "^1.6.3",
     "svg-to-pdf": "github:arnaudjuracek/svg-to-pdf",
     "tmp": "^0.1.0",
