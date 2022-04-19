@@ -8,6 +8,7 @@ module.exports = {
   method: 'POST',
   endpoint: 'log/:namespace',
   description: 'Append a new entry in the corresponding namespaced log, creating the file if none. IP are anonymized, user inputs sanitized.',
+  contentType: 'application/json',
   body: {
     action: {
       required: false,

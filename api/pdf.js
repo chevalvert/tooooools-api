@@ -13,7 +13,7 @@ async function moveAllRequestFiles (files = {}, docPath) {
 module.exports = {
   method: 'POST',
   description: 'Convert svg to pdf',
-  // The body content type should be multipart/form-data
+  contentType: 'multipart/form-data',
   body: {
     svg: {
       required: true,

@@ -8,6 +8,7 @@ function colorDistanceSq ([r1, g1, b1], [r2, g2, b2]) {
 module.exports = {
   method: 'POST',
   description: 'Find Pantone® references similar to a RGB color',
+  contentType: 'application/json',
   body: {
     rgb: {
       required: true,

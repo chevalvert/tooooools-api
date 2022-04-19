@@ -68,6 +68,7 @@ module.exports = {
   method: 'POST',
   // endpoint: 'echo/:param?',
   description: 'Return the body `message` property',
+  contentType: 'application/json', // Optional, will fail all requests not matching content-type
   body: {
     message: {
       required: true,

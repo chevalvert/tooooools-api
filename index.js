@@ -94,16 +94,29 @@ function registerEndpoint ({
   method = 'GET',
   action,
   body,
-  description = 'No description available'
+  description = 'No description available',
+  contentType
 } = {}) {
   if (!action) return
 
   endpoint = endpoint ? ensureLeadingSlash(endpoint) : ''
-  endpoints[process.env.API_ENDPOINT + endpoint] = { description, method, body }
+  endpoints[process.env.API_ENDPOINT + endpoint] = { description, method, body, contentType }
 
-  if (method === 'GET') router.get(endpoint, ensureValidBody(action, body))
-  if (method === 'POST') router.post(endpoint, ensureValidBody(action, body))
-  else router.all(endpoint, ensureValidBody(action, body))
+  action = ensureValidBody(action, body)
+  action = ensureValidContentType(action, contentType)
+
+  if (method === 'GET') router.get(endpoint, action)
+  if (method === 'POST') router.post(endpoint, action)
+  else router.all(endpoint, action)
+}
+
+// Decorate an action to ensure that it validates its content-type header
+function ensureValidContentType (action, expectedContentType) {
+  return function (req, res, next) {
+    return expectedContentType && !req.is(expectedContentType)
+      ? next(new Error(`Content-Type is expected to be '${expectedContentType}', got ${req.get('Content-Type') || 'nothing'}`))
+      : action(req, res, next)
+  }
 }
 
 // Decorate an action to ensure that it validates its req.body against a body
@@ -114,7 +127,7 @@ function ensureValidBody (action, bodySignature) {
 
     for (const [key, { required, type, default: defaultValue }] of Object.entries(bodySignature)) {
       // Ensure all required keys are present
-      if (required && !req.body.hasOwnProperty(key)) {
+      if (required && typeof req.body[key] === 'undefined') {
         return next(new Error(`Query malformation: '${key}' key expected in body`))
       }
 
